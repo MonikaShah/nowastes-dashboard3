@@ -33,6 +33,19 @@ export const useStore = create((set) => ({
   bounds: [],
   updateBounds: (newBounds) => set(() => ({ bounds: newBounds })),
 
+  // bounds of each layer for drill up
+  wardBounds: [],
+  updateWardBounds: (newBounds) => set(() => ({ wardBounds: newBounds })),
+
+  prabhagBounds: [],
+  updatePrabhagBounds: (newBounds) => set(() => ({ prabhagBounds: newBounds })),
+
+  regionBounds: [],
+  updateRegionBounds: (newBounds) => set(() => ({ regionBounds: newBounds })),
+
+  buildingBounds: [],
+  updateBuildingBounds: (newBounds) => set(() => ({ buildingBounds: newBounds })),
+
   // loading state
   isLoading: false,
   updateIsLoading: (newIsLoading) => set(() => ({ isLoading: newIsLoading })),

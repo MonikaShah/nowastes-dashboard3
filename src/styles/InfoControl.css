@@ -22,3 +22,37 @@
   color: #4b4b4b;
   margin-top: 0;
 }
+
+/* Media Queries for Responsive Design */
+
+@media screen and (max-width: 768px) {
+  /* Adjust styles for screens up to 768px wide */
+  .info {
+    padding: 0.75rem;
+    min-width: 7rem;
+  }
+
+  .info h2 {
+    font-size: 1.1rem;
+  }
+
+  .info h3 {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* Adjust styles for screens up to 480px wide */
+  .info {
+    padding: 0.5rem;
+    min-width: 6rem;
+  }
+
+  .info h2 {
+    font-size: 1rem;
+  }
+
+  .info h3 {
+    font-size: 0.8rem;
+  }
+}
