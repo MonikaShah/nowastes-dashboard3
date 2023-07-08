@@ -16,6 +16,7 @@ import L from "leaflet";
 import ZoomToBounds from "./ZoomToBounds";
 import InfoControl from "./InfoControl";
 import DrillUpButton from "./DrillUpButton.jsx";
+import Sidebar from "./Sidebar.jsx";
 
 // util imports
 import {
@@ -29,6 +30,7 @@ import { tileLayers } from "../utils/tileLayers.js";
 // api imports
 import fetchWasteDataV1 from "../utils/fetchWasteDataV1.js";
 import fetchGeoDataV1 from "../utils/fetchGeoDataV1.js";
+import ResetZoom from "./ResetZoom.jsx";
 // import useFetchGeoDataV2 from "../utils/FetchGeoDataV2.js";
 
 // some map options and constants
@@ -41,11 +43,11 @@ const zoomSnap = 0.1;
 const zoomDelta = 1;
 const mapStyle = { height: "100%", width: "100%" }; // dimension of the map
 const touchZoom = false;
-const dragging = false;
+const dragging = true;
 
 // layer names as shown in geoserver
-const wardLayerName = "geonode:wards";
-const prabhagLayerName = "geonode:prabhags";
+const wardLayerName = "geonode:wards_v4";
+const prabhagLayerName = "geonode:prabhags_2023_v3";
 const regionLayerName = "geonode:regions0";
 const buildingLayerName = "geonode:buildings1";
 
@@ -197,7 +199,7 @@ function Map() {
   const getPrabhagInfo = (e) => {
     const prabhagName = e.target.feature.properties.name;
     const prabhagID = e.target.feature.properties.id;
-    const parentWardID = e.target.feature.properties.parent_id;
+    const parentWardID = e.target.feature.properties.ward_id;
     const prabhagBounds = e.target._bounds;
 
     return { prabhagName, prabhagID, parentWardID, prabhagBounds };
@@ -243,6 +245,27 @@ function Map() {
     };
   };
 
+  // bounds for each layer
+  // these are used to reset map view as well as in the drill up function
+  const initialMapBounds = L.geoJSON(wardData).getBounds();
+  const selectedWardBounds = L.geoJSON(filteredPrabhagData).getBounds();
+  const selectedPrabhagBounds = L.geoJSON(filteredRegionData).getBounds();
+  const selectedRegionBounds = L.geoJSON(filteredBuildingData).getBounds();
+
+  // function to reset map view
+  const resetMapZoom = () => {
+    // reset map bounds based on layer
+    if (layerNumber === 1) {
+      updateMapBounds(initialMapBounds);
+    } else if (layerNumber === 2) {
+      updateMapBounds(selectedWardBounds);
+    } else if (layerNumber === 3) {
+      updateMapBounds(selectedPrabhagBounds);
+    } else if (layerNumber === 4) {
+      updateMapBounds(selectedRegionBounds);
+    }
+  };
+
   //==============================================================================================================
   //==============================================================================================================
   //
@@ -264,7 +287,6 @@ function Map() {
 
     // fetch geo data
     const geoData = await fetchGeoData(wardLayerName);
-    console.log("WARD GEO DATA: ", geoData);
 
     // update ward data
     updateWardData(geoData);
@@ -295,7 +317,7 @@ function Map() {
     const { wardName, wardID, wardBounds } = getWardInfo(e);
 
     // create cql filter
-    const cql = `parent_id = ${wardID}`;
+    const cql = `ward_id = ${wardID}`;
 
     // fetch geo data
     const geoData = await fetchGeoData(prabhagLayerName, cql);
@@ -405,7 +427,6 @@ function Map() {
 
     // fetch geo data
     const geoData = await fetchGeoData(buildingLayerName, cql);
-    console.log("BUILDING GEO DATA: ", geoData);
 
     // condition to check if geo data contains any features
     if (geoData.features.length > 0) {
@@ -459,8 +480,6 @@ function Map() {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // initial map bounds
-  const initialMapBounds = L.geoJSON(wardData).getBounds();
 
   // function to handle drill up
   const handleDrillUp = () => {
@@ -625,6 +644,10 @@ function Map() {
       touchZoom={touchZoom}
       dragging={dragging}
     >
+
+      {/* Sidebar goes here */}
+      <Sidebar position="topleft"/>
+
       {/* Layer Control to toggle Tile Layers */}
       <LayersControl position="topright">
         {tileLayers.map((layer, index) => (
@@ -633,6 +656,9 @@ function Map() {
           </BaseLayer>
         ))}
       </LayersControl>
+
+      {/* Add Zoom Reset Control Here */}
+      <ResetZoom position="topright" onClick={resetMapZoom} />
 
       {/* Add info control here */}
       <InfoControl

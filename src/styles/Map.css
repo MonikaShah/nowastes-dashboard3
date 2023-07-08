@@ -17,6 +17,11 @@ body {
   overflow: hidden;
 }
 
+.leaflet-control:focus {
+  outline: none;
+}
+
+
 .custom-geojson-layer:focus {
   outline: none !important;
 }

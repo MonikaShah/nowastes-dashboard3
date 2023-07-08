@@ -1,0 +1,45 @@
+/* styles/ResetZoom.css */
+.reset-zoom-btn {
+    background-color: white;
+    min-width: 1.25rem;
+    min-height: 1.25rem;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 0.125rem solid black;
+    opacity: 0.9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-family: Poppins, sans-serif;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .reset-zoom-btn i {
+    color: #333;
+    font-size: 1.2rem; /* Adjust the icon size as needed */
+  }
+  
+  /* Hover style */
+  .reset-zoom-btn:hover {
+    background-color: lightgray;
+  }
+  
+  /* Media Queries for Responsive Design */
+  
+  @media screen and (max-width: 768px) {
+    /* Adjust styles for screens up to 768px wide */
+    .reset-zoom-btn {
+      padding: 0.75rem;
+      min-width: 1.25rem;
+      min-height: 1.25rem;
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    /* Adjust styles for screens up to 480px wide */
+    .reset-zoom-btn {
+      padding: 0.75rem;
+      min-width: 1.25rem;
+      min-height: 1.25rem;
+    }
+  }
+  

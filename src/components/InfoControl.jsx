@@ -1,3 +1,5 @@
+// This component creates a Leaflet Control to display info about the current layer and selected feature name
+
 // React imports
 import { useEffect } from "react";
 import PropTypes from "prop-types";
