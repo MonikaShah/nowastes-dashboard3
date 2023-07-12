@@ -8,6 +8,8 @@ import Map from "./Map";
 import "../styles/App.css";
 
 // Utilities
+import '@fortawesome/fontawesome-free/css/all.css';
+
 
 export default function App() {
   return (

@@ -646,7 +646,7 @@ function Map() {
     >
 
       {/* Sidebar goes here */}
-      <Sidebar position="topleft"/>
+      <Sidebar/>
 
       {/* Layer Control to toggle Tile Layers */}
       <LayersControl position="topright">

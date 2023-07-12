@@ -1,6 +1,6 @@
 .drill-up-btn {
     font-family: 'Poppins', sans-serif;
-    background-color: #29b05a; /* Green */
+    background-color: #FF4081; /* Green */
     border: 0.125rem solid black;
     color: white;
     padding: 1rem;
@@ -17,7 +17,7 @@
 }
 
 .drill-up-btn:hover {
-    background-color: rgb(9, 200, 76);
+    background-color: #E62C6B;
     color: rgb(255, 255, 255);
 }
 
