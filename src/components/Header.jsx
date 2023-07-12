@@ -2,7 +2,7 @@ import '../styles/Header.css'; // Import the CSS file
 
 const Header = () => {
   const handleBackClick = () => {
-    window.location.href = '#'; // Replace '#' with your desired URL
+    window.location.href = 'http://mumbai.nowastes.in/'; // Replace '#' with your desired URL
   };
 
   return (

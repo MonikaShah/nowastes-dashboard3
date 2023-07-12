@@ -1,0 +1,105 @@
+/* ControlsContent.css */
+
+.controls > * {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.submitbtn {
+  /* margin-top: 0.25rem;  Reset top margin */
+  margin-bottom: 0;  /* Reset bottom margin */
+  /* Rest of your rules */
+}
+
+.controls {
+    /* margin: 0.125rem; */
+    /* margin-left: 0.1rem; */
+    /* padding: 0.01rem; */
+    font-family: Poppins, sans-serif;
+    display: flex;
+    flex-direction: column;
+    cursor: auto;
+  }
+  
+  .controls label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.25rem;
+    font-weight: bold;
+    font-size: medium;
+  }
+  
+  .controls .datepicker-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .controls .datepicker-container .react-datepicker-wrapper {
+    margin-bottom: 0.5rem;
+    flex: 1;
+  }
+  
+  .controls .datepicker-container .react-datepicker__input-container {
+    width: 100%;
+  }
+  
+  .controls .datepicker-container .react-datepicker__input-container input {
+    /* Disable autocomplete */
+    autocomplete: off;
+    border: 0.125rem solid black;
+    border-radius: 0.25rem;
+  }
+  
+  .controls .sampling-period-selector {
+    margin-top: 1rem;
+  }
+  
+  .controls .sampling-period-selector label {
+    display: block;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+    font-weight: bold;
+  }
+  
+  .controls .sampling-period-selector select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: small;
+    font-family: Poppins, sans-serif;
+    border-radius: 0.25rem;
+    border: 0.125rem solid black;
+  }
+  
+  .controls .submitbtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    font-size: medium;
+    border-radius: 0.5rem;
+    border: 0.125rem solid black;
+    background-color: rgb(246, 59, 227);
+    color: white;
+  }
+  
+  .controls .submitbtn:hover {
+    background-color: rgb(192, 18, 175);
+  }
+
+  
+#sampling-period {
+    font-family: Poppins, sans-serif;
+    border-radius: 0.125rem;
+    border: 0.125rem solid black;
+}
+
+#parameter {
+    font-family: Poppins, sans-serif;
+    border-radius: 0.125rem;
+    border: 0.125rem solid black;
+}
+
+

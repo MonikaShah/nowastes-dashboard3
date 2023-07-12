@@ -1,0 +1,24 @@
+/* layers-content.css */
+
+.layers-content-container {
+    margin-bottom: 0.01rem;
+    font-size: small;
+  }
+  
+  .layers-content-container p {
+    margin-bottom: 0.01rem;
+  }
+  
+  .layers-content-container ol {
+    margin-left: 0;
+    padding-left: 1rem;
+  }
+  
+  .layers-content-container li {
+    font-weight: bold;
+  }
+  
+  .layers-content-container p:last-child {
+    margin-top: 0.01rem;
+  }
+  

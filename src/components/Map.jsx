@@ -1,7 +1,7 @@
 // This is the map component. It will render the map.
 
 // React imports
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 // Zustand imports
 import { useStore } from "../store/store.js";
@@ -86,8 +86,27 @@ function Map() {
   //   (state) => state.updateSelectedBuildingName
   // );
 
+  // geo data variables to hold info about actual geo data during drill down
+  // ward that has been drilled down into
+  const drilledDownWard = useStore((state) => state.drilledDownWard);
+  const updateDrilledDownWard = useStore(
+    (state) => state.updateDrilledDownWard
+  );
+
+  // prabhag that has been drilled down into
+  const drilledDownPrabhag = useStore((state) => state.drilledDownPrabhag);
+  const updateDrilledDownPrabhag = useStore(
+    (state) => state.updateDrilledDownPrabhag
+  );
+
+  // region that has been drilled down into
+  const drilledDownRegion = useStore((state) => state.drilledDownRegion);
+  const updateDrilledDownRegion = useStore(
+    (state) => state.updateDrilledDownRegion
+  );
+
   // to keep track of selected Feature and function to update it
-  // const selectedFeature = useStore((state) => state.selectedFeature);
+  const selectedFeature = useStore((state) => state.selectedFeature);
   const updateSelectedFeature = useStore(
     (state) => state.updateSelectedFeature
   );
@@ -137,6 +156,19 @@ function Map() {
   const updatePrabhagBounds = useStore((state) => state.updatePrabhagBounds);
   const updateRegionBounds = useStore((state) => state.updateRegionBounds);
   // const updateBuildingBounds = useStore((state) => state.updateBuildingBounds);
+
+  // start date and end date and functions to update them
+  const startDate = useStore((state) => state.startDate);
+  const endDate = useStore((state) => state.endDate);
+  const updateStartDate = useStore((state) => state.updateStartDate);
+  const updateEndDate = useStore((state) => state.updateEndDate);
+
+  // sampling period and function to update it
+  const samplingPeriod = useStore((state) => state.samplingPeriod);
+  const updateSamplingPeriod = useStore((state) => state.updateSamplingPeriod);
+
+  // selected parameter and function to update it
+  const selectedParameter = useStore((state) => state.selectedParameter);
 
   // LAYER HEIRARCHY
   // ward: 1
@@ -280,16 +312,83 @@ function Map() {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  // async function to fetch all data for a layer
+  // async function to fetch all data for ward layer
   const fetchWardData = async () => {
     // set loading state to true
     updateIsLoading(true);
 
+    // Function to build Ward Waste data Query Params
+    const buildWardWasteDataQueryParams = (
+      startDate,
+      endDate,
+      samplingPeriod
+    ) => {
+      // build query params
+      let params = {
+        admin_level: "ward",
+        from_date: startDate,
+        to_date: endDate,
+        sampling_period: samplingPeriod,
+      };
+
+      return params;
+    };
+
+    // build query params
+    let queryParams = buildWardWasteDataQueryParams(
+      startDate,
+      endDate,
+      samplingPeriod
+    );
+    // console.log("Query Params: ", queryParams);
+
     // fetch geo data
     const geoData = await fetchGeoData(wardLayerName);
+    // console.log("Ward Geo Data: ", geoData);
+
+    // fetch ward waste data
+    const wardWasteData = await fetchWasteDataV1(queryParams);
+    // console.log("Ward Waste Data: ", wardWasteData);
+
+    // Merge ward geo data and ward waste data
+    const mergeGeoAndWasteData = (geoData, wardWasteData, featureName) => {
+      // check if ward geo data and ward waste data are present
+      if (!wardWasteData || !geoData) {
+        console.error("Error: Ward Geo Data or Ward Waste Data is missing");
+        return;
+      }
+
+      // loop over ward geo data
+      geoData.features.forEach((feature) => {
+        // get the primary id of the geo data
+        const featureNameLower = feature.properties[featureName]
+          .toString()
+          .toLowerCase();
+
+        // loop over ward waste data
+        const wasteDataForFeature = wardWasteData.filter(
+          (wasteData) => wasteData.primary_id === featureNameLower
+        );
+
+        // check if ward waste data is present for the feature
+        if (wasteDataForFeature.length > 0) {
+          // add ward waste data to the geo data
+          feature.properties = {
+            ...feature.properties,
+            ...wasteDataForFeature[0],
+          };
+        }
+      });
+
+      return geoData;
+    };
+
+    // merge ward geo data and ward waste data
+    const mergedGeoData = mergeGeoAndWasteData(geoData, wardWasteData, "id");
+    // console.log("Merged Ward Geo Data: ", mergedGeoData);
 
     // update ward data
-    updateWardData(geoData);
+    updateWardData(mergedGeoData);
 
     // set loading state to false
     updateIsLoading(false);
@@ -299,7 +398,7 @@ function Map() {
   useEffect(() => {
     // fetch ward data
     fetchWardData();
-  }, []);
+  }, [startDate, endDate, samplingPeriod, selectedParameter]);
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,16 +418,83 @@ function Map() {
     // create cql filter
     const cql = `ward_id = ${wardID}`;
 
+    // Function to build Prabhag Waste data Query Params
+    const buildPrabhagWasteDataQueryParams = (
+      startDate,
+      endDate,
+      samplingPeriod
+    ) => {
+      // build query params
+      let params = {
+        admin_level: "prabhag",
+        from_date: startDate,
+        to_date: endDate,
+        sampling_period: samplingPeriod,
+        parent_id: wardID,
+      };
+
+      return params;
+    };
+
+    // build query params
+    let queryParams = buildPrabhagWasteDataQueryParams(
+      startDate,
+      endDate,
+      samplingPeriod
+    );
+
     // fetch geo data
     const geoData = await fetchGeoData(prabhagLayerName, cql);
 
+    // fetch prabhag waste data
+    const prabhagWasteData = await fetchWasteDataV1(queryParams);
+
+    // Merge prabhag geo data and prabhag waste data
+    const mergeGeoAndWasteData = (geoData, prabhagWasteData, featureName) => {
+      // check if prabhag geo data and prabhag waste data are present
+      if (!prabhagWasteData || !geoData) {
+        console.error(
+          "Error: Prabhag Geo Data or Prabhag Waste Data is missing"
+        );
+        return;
+      }
+
+      // loop over prabhag geo data
+      geoData.features.forEach((feature) => {
+        // get the primary id of the geo data
+        const featureNameLower = feature.properties[featureName]
+          .toString()
+          .toLowerCase();
+
+        // loop over prabhag waste data
+        const wasteDataForFeature = prabhagWasteData.filter(
+          (wasteData) => wasteData.primary_id === featureNameLower
+        );
+
+        // check if prabhag waste data is present for the feature
+        if (wasteDataForFeature.length > 0) {
+          // add prabhag waste data to the geo data
+          feature.properties = {
+            ...feature.properties,
+            ...wasteDataForFeature[0],
+          };
+        }
+      });
+
+      return geoData;
+    };
+
+    // merge prabhag geo data and prabhag waste data
+    const mergedGeoData = mergeGeoAndWasteData(geoData, prabhagWasteData, "id");
+    // console.log("Merged Prabhag Geo Data: ", mergedGeoData);
+
     // condition to check if geo data contains any features
-    if (geoData.features.length > 0) {
+    if (mergedGeoData.features.length > 0) {
       // update hasDrilledDown state
       updateHasDrilledDown(true);
 
       // update filtered prabhag data
-      updateFilteredPrabhagData(geoData);
+      updateFilteredPrabhagData(mergedGeoData);
 
       // update layer number
       incrementLayerNumber(layerNumber);
@@ -342,6 +508,9 @@ function Map() {
       // update ward bounds state variable
       updateWardBounds(wardBounds);
 
+      // update the ward that we have drilled down into
+      updateDrilledDownWard(selectedFeature);
+
       // update current layer
       updateCurrentLayer("prabhag");
     } else {
@@ -353,6 +522,7 @@ function Map() {
     // set loading state to false
     updateIsLoading(false);
   };
+
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -372,16 +542,82 @@ function Map() {
     // create cql filter
     const cql = `prabhag_no = ${prabhagID}`;
 
+    // Function to build Region Waste data Query Params
+    const buildRegionWasteDataQueryParams = (
+      startDate,
+      endDate,
+      samplingPeriod
+    ) => {
+      // build query params
+      let params = {
+        admin_level: "region",
+        from_date: startDate,
+        to_date: endDate,
+        sampling_period: samplingPeriod,
+        parent_id: prabhagID,
+      };
+
+      return params;
+    };
+
+    // build query params
+    let queryParams = buildRegionWasteDataQueryParams(
+      startDate,
+      endDate,
+      samplingPeriod
+    );
+
     // fetch geo data
     const geoData = await fetchGeoData(regionLayerName, cql);
+    // console.log("Region Geo Data: ", geoData);
+
+    // fetch region waste data
+    const regionWasteData = await fetchWasteDataV1(queryParams);
+
+    // Merge region geo data and region waste data
+    const mergeGeoAndWasteData = (geoData, regionWasteData, featureName) => {
+      // check if region geo data and region waste data are present
+      if (!regionWasteData || !geoData) {
+        console.error("Error: Region Geo Data or Region Waste Data is missing");
+        return;
+      }
+
+      // loop over region geo data
+      geoData.features.forEach((feature) => {
+        // get the primary id of the geo data
+        const featureNameLower = feature.properties[featureName]
+          .toString()
+          .toLowerCase();
+
+        // loop over region waste data
+        const wasteDataForFeature = regionWasteData.filter(
+          (wasteData) => wasteData.primary_id === featureNameLower
+        );
+
+        // check if region waste data is present for the feature
+        if (wasteDataForFeature.length > 0) {
+          // add region waste data to the geo data
+          feature.properties = {
+            ...feature.properties,
+            ...wasteDataForFeature[0],
+          };
+        }
+      });
+
+      return geoData;
+    };
+
+    // merge region geo data and region waste data
+    const mergedGeoData = mergeGeoAndWasteData(geoData, regionWasteData, "id");
+    // console.log("Merged Region Geo Data: ", mergedGeoData);
 
     // condition to check if geo data contains any features
-    if (geoData.features.length > 0) {
+    if (mergedGeoData.features.length > 0) {
       // update hasDrilledDown state
       updateHasDrilledDown(true);
 
       // update filtered region data
-      updateFilteredRegionData(geoData);
+      updateFilteredRegionData(mergedGeoData);
 
       // update layer number
       incrementLayerNumber(layerNumber);
@@ -425,16 +661,87 @@ function Map() {
     // create cql filter
     const cql = `region_id = ${regionID}`;
 
+    // Function to build Building Waste data Query Params
+    const buildBuildingWasteDataQueryParams = (
+      startDate,
+      endDate,
+      samplingPeriod
+    ) => {
+      // build query params
+      let params = {
+        admin_level: "building",
+        from_date: startDate,
+        to_date: endDate,
+        sampling_period: samplingPeriod,
+        parent_id: regionID,
+      };
+
+      return params;
+    };
+
+    // build query params
+    let queryParams = buildBuildingWasteDataQueryParams(
+      startDate,
+      endDate,
+      samplingPeriod
+    );
+
     // fetch geo data
     const geoData = await fetchGeoData(buildingLayerName, cql);
 
+    // fetch building waste data
+    const buildingWasteData = await fetchWasteDataV1(queryParams);
+
+    // Merge building geo data and building waste data
+    const mergeGeoAndWasteData = (geoData, buildingWasteData, featureName) => {
+      // check if building geo data and building waste data are present
+      if (!buildingWasteData || !geoData) {
+        console.error(
+          "Error: Building Geo Data or Building Waste Data is missing"
+        );
+        return;
+      }
+
+      // loop over building geo data
+      geoData.features.forEach((feature) => {
+        // get the primary id of the geo data
+        const featureNameLower = feature.properties[featureName]
+          .toString()
+          .toLowerCase();
+
+        // loop over building waste data
+        const wasteDataForFeature = buildingWasteData.filter(
+          (wasteData) => wasteData.primary_id === featureNameLower
+        );
+
+        // check if building waste data is present for the feature
+        if (wasteDataForFeature.length > 0) {
+          // add building waste data to the geo data
+          feature.properties = {
+            ...feature.properties,
+            ...wasteDataForFeature[0],
+          };
+        }
+      });
+
+      return geoData;
+    };
+
+    // merge building geo data and building waste data
+    const mergedGeoData = mergeGeoAndWasteData(
+      geoData,
+      buildingWasteData,
+      "fid"
+    );
+    // console.log("Merged Building Geo Data: ", mergedGeoData);
+
     // condition to check if geo data contains any features
-    if (geoData.features.length > 0) {
+    if (mergedGeoData.features.length > 0) {
       // update hasDrilledDown state
       updateHasDrilledDown(true);
 
       // update filtered building data
-      updateFilteredBuildingData(geoData);
+      updateFilteredBuildingData(mergedGeoData);
 
       // update layer number
       incrementLayerNumber(layerNumber);
@@ -479,7 +786,6 @@ function Map() {
   ////////////////////////////////////////////  DRILL UP FUNCTION ////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
   // function to handle drill up
   const handleDrillUp = () => {
@@ -644,9 +950,8 @@ function Map() {
       touchZoom={touchZoom}
       dragging={dragging}
     >
-
       {/* Sidebar goes here */}
-      <Sidebar/>
+      <Sidebar />
 
       {/* Layer Control to toggle Tile Layers */}
       <LayersControl position="topright">
@@ -663,7 +968,7 @@ function Map() {
       {/* Add info control here */}
       <InfoControl
         position="topright"
-        content={{ selectedFeatureName, currentLayer }}
+        content={{ selectedFeatureName, currentLayer, selectedFeature }}
       />
 
       {/* Add Drill Up Button Here */}

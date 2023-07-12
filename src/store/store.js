@@ -94,8 +94,33 @@ export const useStore = create((set) => ({
   selectedBuildingName: null,
   updateSelectedBuildingName: (newBuildingName) => set(() => ({ selectedBuildingName: newBuildingName })),
 
+  // variables to store actual geo data during drill down
+  drilledDownWard: null,
+  updateDrilledDownWard: (ward) => set(() => ({ drilledDownWard: ward})),
+
+  drilledDownPrabhag: null,
+  updateDrilledDownPrabhag: (prabhag) => set(() => ({ drilledDownPrabhag: prabhag})),
+
+  drilledDownRegion: null,
+  updateDrilledDownRegion: (region) => set(() => ({ drilledDownRegion: region})),
+
+
   // waste type
   selectedWasteType: null,
   updateSelectedWasteType: (newWasteType) => set(() => ({ selectedWasteType: newWasteType })),
 
+  // global start date and end date
+  startDate: "2023-06-30",
+  updateStartDate: (newStartDate) => set(() => ({ startDate: newStartDate })),
+
+  endDate: "2023-06-30",
+  updateEndDate: (newEndDate) => set(() => ({ endDate: newEndDate })),
+
+  // global samling period
+  samplingPeriod: "daily",
+  updateSamplingPeriod: (newSamplingPeriod) => set(() => ({ samplingPeriod: newSamplingPeriod })),
+
+  // selected Waste Type
+  selectedParameter: "total_waste",
+  updateSelectedParameter: (newParameter) => set(() => ({ selectedParameter: newParameter })),
 }));

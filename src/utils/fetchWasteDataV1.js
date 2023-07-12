@@ -6,12 +6,12 @@ import buildWasteURL from "./buildWasteURL";
 // This function fetches the waste data from the API asynchronously
 async function fetchWasteDataV1(queryParams, fallbackQueryParams = null) {
   // set base URL for waste data API
-  const baseURL = "";
+  const baseURL = "https://nowaste-api.onrender.com/api";
 
   // set default parameters for the waste data API
   const defaultParameters = {
     admin_level: null,
-    admin_id: null,
+    sampling_period: null,
     from_date: null,
     to_date: null,
   };
@@ -53,10 +53,10 @@ async function fetchWasteDataV1(queryParams, fallbackQueryParams = null) {
         // check content type of response
         const contentType = fallbackResponse.headers.get("content-type");
 
-        // if content type is not json, throw an error
-        if (!contentType || !contentType.includes("application/json")) {
-          throw new TypeError("Content type is not json");
-        }
+        // // if content type is not json, throw an error
+        // if (!contentType || !contentType.includes("application/json")) {
+        //   throw new TypeError("Content type is not json");
+        // }
 
         const data = await fallbackResponse.json();
         return data;

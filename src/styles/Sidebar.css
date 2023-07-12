@@ -66,10 +66,13 @@
   padding: 0.25rem;
   background-color: #7af0b5;
   cursor: auto;
+  margin-top: 0.125rem;
 }
 
 .sidebar-content-body::-webkit-scrollbar {
   width: 0.5rem; /* Adjust the width as needed */
+  margin-top: 0.125rem;
+  margin-bottom: 0.125rem; /* Add margin to the bottom */
 }
 
 .sidebar-content-body::-webkit-scrollbar-track {
