@@ -1,0 +1,25 @@
+.legend {
+    position: absolute;
+    bottom: 30px; /* Adjust the value as needed to position it at the desired vertical position */
+    right: 10px; /* Adjust the value as needed to position it at the desired horizontal position */
+    background-color: #f8f8ff;
+    margin-top: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0px 0px 5px #888;
+    z-index: 1000;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    border: 1px solid black;
+  }

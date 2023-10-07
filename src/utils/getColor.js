@@ -10,20 +10,31 @@ export default function getColor(value) {
 
   // define the color scale for each parameter
   // total waste
+  // const magma = [
+  //   "#000004",
+  //   "#140e36",
+  //   "#3b0f70",
+  //   "#641a80",
+  //   "#8c2981",
+  //   "#b73779",
+  //   "#de4968",
+  //   "#f66e5d",
+  //   "#fe9444",
+  //   "#ffb62b",
+  //   "#ffdc27",
+  //   "#f6f64e",
+  // ];
+  
   const magma = [
-    "#000004",
-    "#140e36",
-    "#3b0f70",
-    "#641a80",
-    "#8c2981",
-    "#b73779",
-    "#de4968",
-    "#f66e5d",
-    "#fe9444",
-    "#ffb62b",
-    "#ffdc27",
-    "#f6f64e",
+    "#006400",
+    // "#C0FF01",
+    "#33FF41",
+    "#FFFF00",
+    "#FFA500",
+    "#FF573B",
+    "#FF0000",
   ];
+
 
   // dry waste
   const viridis = [
@@ -82,6 +93,14 @@ export default function getColor(value) {
     "#feebe2",
     "#fff7f3",
   ];
+  const weightColorScale = [
+    [1, 2, "#C0FF01"],
+    [3, 4, "#33FF41"],
+    [5, 6, "#FFFF00"],
+    [7, 8, "#FFA500"],
+    [9, 10, "#FF573B"],
+    [11, 12, "#FF0000"],
+  ];
 
   // define some variables
 
@@ -105,38 +124,52 @@ export default function getColor(value) {
   switch (currentLayer) {
     case "ward":
       assignRangesAndColorScale(selectedParameter, {
-        "population": [18000, 180000, inferno],
-        "dry_waste": [12000, 120000, viridis],
-        "wet_waste": [18000, 180000, turbo],
+        // "population": [18000, 180000, inferno],
+        // "dry_waste": [12000, 120000, viridis],
+        // "wet_waste": [18000, 180000, turbo],
+        "population": [18000, 180000, magma],
+        "dry_waste": [12000, 120000, magma],
+        "wet_waste": [18000, 180000, magma],
         "total_waste": [24000, 240000, magma],
-        "weight": [1, 10, plasma]
+        "weight": [1, 13, magma]
       });
       break;
     case "prabhag":
       assignRangesAndColorScale(selectedParameter, {
-        "population": [1800, 18000, inferno],
-        "dry_waste": [1200, 12000, viridis],
-        "wet_waste": [1800, 18000, turbo],
+        // "population": [1800, 18000, inferno],
+        // "dry_waste": [1200, 12000, viridis],
+        // "wet_waste": [1800, 18000, turbo],
+        // "total_waste": [2400, 24000, magma],
+        "population": [1800, 18000, magma],
+        "dry_waste": [1200, 12000, magma],
+        "wet_waste": [1800, 18000, magma],
         "total_waste": [2400, 24000, magma],
-        "weight": [1, 10, plasma]
+        "weight": [1, 13, magma]
       });
       break;
     case "region":
       assignRangesAndColorScale(selectedParameter, {
-        "population": [180, 1800, inferno],
-        "dry_waste": [120, 1200, viridis],
-        "wet_waste": [180, 1800, turbo],
+        // "population": [180, 1800, inferno],
+        // "dry_waste": [120, 1200, viridis],
+        // "wet_waste": [180, 1800, turbo],
+        // "total_waste": [240, 2400, magma],
+        "population": [180, 1800, magma],
+        "dry_waste": [120, 1200, magma],
+        "wet_waste": [180, 1800, magma],
         "total_waste": [240, 2400, magma],
-        "weight": [1, 10, plasma]
+        "weight": [1, 13, magma]
       });
       break;
     case "building":
       assignRangesAndColorScale(selectedParameter, {
-        "population": [18, 180, inferno],
-        "dry_waste": [12, 120, viridis],
-        "wet_waste": [18, 180, turbo],
+        // "population": [18, 180, inferno],
+        // "dry_waste": [12, 120, viridis],
+        // "wet_waste": [18, 180, turbo],
+        "population": [18, 180, magma],
+        "dry_waste": [12, 120, magma],
+        "wet_waste": [18, 180, magma],
         "total_waste": [24, 240, magma],
-        "weight": [1, 10, plasma]
+        "weight": [1, 13, magma]
       });
       break;
     default:

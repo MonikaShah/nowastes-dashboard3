@@ -28,6 +28,7 @@
     "react-pro-sidebar": "^1.1.0-alpha.1",
     "react-responsive": "^9.0.2",
     "react-spinners": "^0.13.8",
+    "source-map-explorer": "^2.5.3",
     "swr": "^2.2.0",
     "zustand": "^4.3.8"
   },

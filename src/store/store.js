@@ -121,6 +121,6 @@ export const useStore = create((set) => ({
   updateSamplingPeriod: (newSamplingPeriod) => set(() => ({ samplingPeriod: newSamplingPeriod })),
 
   // selected Waste Type
-  selectedParameter: "total_waste",
+  selectedParameter: "weight",
   updateSelectedParameter: (newParameter) => set(() => ({ selectedParameter: newParameter })),
 }));

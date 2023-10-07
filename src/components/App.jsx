@@ -6,6 +6,7 @@ import { useStore } from "../store/store.js";
 // Custom components
 import Header from "./Header";
 import Map from "./Map";
+
 import Loader from "./Loader";
 
 // Styles

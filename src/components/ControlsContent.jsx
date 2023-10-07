@@ -105,7 +105,7 @@ const ControlsContent = () => {
   const updateSamplingPeriod = useStore((state) => state.updateSamplingPeriod);
 
   // local state for the parameter selector
-  const [localParameter, setLocalParameter] = useState("total_waste");
+  const [localParameter, setLocalParameter] = useState("weight");
 
   // global state for the parameter selector
   const updateSelectedParameter = useStore(

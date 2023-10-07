@@ -11,6 +11,9 @@ import { MapContainer, TileLayer, LayersControl, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 const { BaseLayer } = LayersControl;
 import L from "leaflet";
+import Legend from "./Legend.jsx";
+// import DateRange from './DateRange.jsx'
+
 
 // Custom Components
 import ZoomToBounds from "./ZoomToBounds";
@@ -49,7 +52,7 @@ const dragging = true;
 const wardLayerName = "geonode:wards_v4";
 const prabhagLayerName = "geonode:prabhags_2023_v3";
 const regionLayerName = "geonode:regions0";
-const buildingLayerName = "geonode:buildings1";
+const buildingLayerName = "geonode:buildings_p61_p122";
 
 // feature bounds
 var featureBounds = null;
@@ -340,15 +343,15 @@ function Map() {
       endDate,
       samplingPeriod
     );
-    // console.log("Query Params: ", queryParams);
+     console.log("Query Params: ", queryParams);
 
     // fetch geo data
     const geoData = await fetchGeoData(wardLayerName);
-    // console.log("Ward Geo Data: ", geoData);
+     console.log("Ward Geo Data: ", geoData);
 
     // fetch ward waste data
     const wardWasteData = await fetchWasteDataV1(queryParams);
-    // console.log("Ward Waste Data: ", wardWasteData);
+     console.log("Ward Waste Data: ", wardWasteData);
 
     // Merge ward geo data and ward waste data
     const mergeGeoAndWasteData = (geoData, wardWasteData, featureName) => {
@@ -385,7 +388,7 @@ function Map() {
 
     // merge ward geo data and ward waste data
     const mergedGeoData = mergeGeoAndWasteData(geoData, wardWasteData, "id");
-    // console.log("Merged Ward Geo Data: ", mergedGeoData);
+    console.log("Merged Ward Geo Data: ", mergedGeoData);
 
     // update ward data
     updateWardData(mergedGeoData);
@@ -486,7 +489,7 @@ function Map() {
 
     // merge prabhag geo data and prabhag waste data
     const mergedGeoData = mergeGeoAndWasteData(geoData, prabhagWasteData, "id");
-    // console.log("Merged Prabhag Geo Data: ", mergedGeoData);
+     console.log("Merged Prabhag Geo Data: ", mergedGeoData);
 
     // condition to check if geo data contains any features
     if (mergedGeoData.features.length > 0) {
@@ -569,7 +572,7 @@ function Map() {
 
     // fetch geo data
     const geoData = await fetchGeoData(regionLayerName, cql);
-    // console.log("Region Geo Data: ", geoData);
+     console.log("Region Geo Data: ", geoData);
 
     // fetch region waste data
     const regionWasteData = await fetchWasteDataV1(queryParams);
@@ -609,7 +612,7 @@ function Map() {
 
     // merge region geo data and region waste data
     const mergedGeoData = mergeGeoAndWasteData(geoData, regionWasteData, "id");
-    // console.log("Merged Region Geo Data: ", mergedGeoData);
+     console.log("Merged Region Geo Data: ", mergedGeoData);
 
     // condition to check if geo data contains any features
     if (mergedGeoData.features.length > 0) {
@@ -733,7 +736,8 @@ function Map() {
       buildingWasteData,
       "fid"
     );
-    // console.log("Merged Building Geo Data: ", mergedGeoData);
+     console.log("Merged Building Geo Data: ", mergedGeoData);
+     console.log("Merged Building Waste Data: ", buildingWasteData);
 
     // condition to check if geo data contains any features
     if (mergedGeoData.features.length > 0) {
@@ -778,7 +782,7 @@ function Map() {
   const handleBuildingDrillDown = async (e) => {
     // since we are at the last layer, we will not drill down any further
     // we will just show the building info
-    alert("No Further Drill Down Possible!");
+    alert("No Further Drill Down Possible!"); 
   };
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -970,6 +974,12 @@ function Map() {
         position="topright"
         content={{ selectedFeatureName, currentLayer, selectedFeature }}
       />
+
+     {/* Add Legend here */}
+      <Legend/>
+
+      {/* Add Date Range here */}
+      {/* <DateRange/>  */}
 
       {/* Add Drill Up Button Here */}
       {hasDrilledDown && (
