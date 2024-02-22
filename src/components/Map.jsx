@@ -52,7 +52,7 @@ const dragging = true;
 const wardLayerName = "geonode:wards_v4";
 const prabhagLayerName = "geonode:prabhags_2023_v3";
 const regionLayerName = "geonode:regions0";
-const buildingLayerName = "geonode:buildings10";
+const buildingLayerName = "geonode:buildings_p61_p122";
 
 // feature bounds
 var featureBounds = null;
