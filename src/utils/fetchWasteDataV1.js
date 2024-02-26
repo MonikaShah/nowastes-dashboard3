@@ -8,7 +8,7 @@ async function fetchWasteDataV1(queryParams, fallbackQueryParams = null) {
   let currentURL = window.location.href.split('/')
        
   // const baseURL = "http://127.0.0.1:5000/api";
-  const baseURL = "https://nowaste-api-v1.onrender.com/api";
+  const baseURL = "https://nowaste-api-gbvk.onrender.com/api";
 
   // set default parameters for the waste data API
   const defaultParameters = {
